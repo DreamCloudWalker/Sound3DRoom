@@ -56,14 +56,10 @@ public class Player : MonoBehaviour {
 			x += m_moveSpeed * Time.deltaTime;
 		}
 		// move
-		m_ch.Move (m_transform.TransformDirection(new Vector3(x, y, z)));
+		m_ch.Move(m_transform.TransformDirection(new Vector3(x, y, z)));
 
 		Vector3 pos = m_transform.position;
 		pos.y += m_camHeight;
 		m_camTransform.position = pos;
-	}
-
-	void OnDrawGizmos() {
-		Gizmos.DrawIcon (this.transform.position, "Spawn.tif");
 	}
 }
