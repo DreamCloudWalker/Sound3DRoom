@@ -43,10 +43,23 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		UpdateControl ();
+#if (UNITY_iOS || UNITY_ANDROID)
+		MobileInput();
+#else
+		DesktopInput();
+#endif
 	}
 
-	void UpdateControl() {
+	void MobileInput() {
+		if (Input.GetKeyDown(KeyCode.Escape)) { // Application.Quit();
+			Application.Quit();
+		}
+		if (Input.GetKeyDown(KeyCode.Home)) {
+
+		}
+	}
+
+	void DesktopInput() {
 		// rot camera
 		float mouseX = Input.GetAxis ("Mouse X");
 		float mouseY = Input.GetAxis ("Mouse Y");
