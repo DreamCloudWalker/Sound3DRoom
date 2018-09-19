@@ -1,27 +1,41 @@
 using UnityEngine;
 using System.Collections;
+using System.Runtime.InteropServices;
 
 public class Player : MonoBehaviour {
-	public Transform m_transform;
-	private Transform m_camTransform;
-	private Vector3 m_camRot;
-	private float m_camHeight = 1.4f;
-	private CharacterController m_ch;
-	private float m_moveSpeed = 3.0f;
-	private float m_gravity = 2.0f;
+	// [DllImport("o3d_audio")]
+	// public static extern int initO3d();	// 0 success 
+	// [DllImport("o3d_audio")]
+	// public static extern void deinitO3d();
+	// [DllImport("o3d_audio")]
+	// public static extern void playO3d();
+	// [DllImport("o3d_audio")]
+	// public static extern void stopO3d();
+	// [DllImport("o3d_audio")]
+	// public static extern void setListenerPosition(float x, float y, float z);
+	// [DllImport("o3d_audio")]
+	// public static extern void setAudioPosition(long id, float x, float y, float z);	// default id 0
+	
+	public  	Transform 				mTransform;
+	private 	Transform 				mCamTransform;
+	private 	Vector3 				mCamRot;
+	private 	float 					mCamHeight = 1.4f;
+	private 	CharacterController 	mCharacterCtrl;
+	private 	float 					mMoveSpeed = 3.0f;
+	private 	float 					mGravity = 2.0f;
 
 	// Use this for initialization
 	void Start () {
-		m_transform = this.transform;
-		m_ch = this.GetComponent<CharacterController> ();
-		m_camTransform = Camera.main.transform;
+		mTransform = this.transform;
+		mCharacterCtrl = this.GetComponent<CharacterController> ();
+		mCamTransform = Camera.main.transform;
 
         // camera follow player
-		Vector3 pos = m_transform.position;
-		pos.y += m_camHeight;
-		m_camTransform.position = pos;
-		m_camTransform.rotation = m_transform.rotation;
-		m_camRot = m_camTransform.eulerAngles;
+		Vector3 pos = mTransform.position;
+		pos.y += mCamHeight;
+		mCamTransform.position = pos;
+		mCamTransform.rotation = mTransform.rotation;
+		mCamRot = mCamTransform.eulerAngles;
 
 		// lock mouse
 		Screen.lockCursor = true;
@@ -36,30 +50,33 @@ public class Player : MonoBehaviour {
 		// rot camera
 		float mouseX = Input.GetAxis ("Mouse X");
 		float mouseY = Input.GetAxis ("Mouse Y");
-		m_camRot.x -= mouseY;
-		m_camRot.y += mouseX;
-		m_camTransform.eulerAngles = m_camRot;
-		Vector3 camrot = m_camTransform.eulerAngles;
-		camrot.x = 0; camrot.z = 0;
-		m_transform.eulerAngles = camrot;
+		mCamRot.x -= mouseY;
+		mCamRot.y += mouseX;
+		mCamTransform.eulerAngles = mCamRot;
+		Vector3 camrot = mCamTransform.eulerAngles;
+		camrot.x = 0; 
+		camrot.z = 0;
+		mTransform.eulerAngles = camrot;
 
-		float x = 0, y = 0, z = 0;
-		y -= m_gravity * Time.deltaTime;
+		float x = 0;
+		float y = 0;
+		float z = 0;
+		y -= mGravity * Time.deltaTime;
 
 		if (Input.GetKey(KeyCode.W)) {
-			z += m_moveSpeed * Time.deltaTime;
+			z += mMoveSpeed * Time.deltaTime;
 		} else if (Input.GetKey(KeyCode.S)) {
-			z -= m_moveSpeed * Time.deltaTime;
+			z -= mMoveSpeed * Time.deltaTime;
 		} else if (Input.GetKey(KeyCode.A)) {
-			x -= m_moveSpeed * Time.deltaTime;
+			x -= mMoveSpeed * Time.deltaTime;
 		} else if (Input.GetKey(KeyCode.D)) {
-			x += m_moveSpeed * Time.deltaTime;
+			x += mMoveSpeed * Time.deltaTime;
 		}
 		// move
-		m_ch.Move(m_transform.TransformDirection(new Vector3(x, y, z)));
+		mCharacterCtrl.Move(mTransform.TransformDirection(new Vector3(x, y, z)));
 
-		Vector3 pos = m_transform.position;
-		pos.y += m_camHeight;
-		m_camTransform.position = pos;
+		Vector3 pos = mTransform.position;
+		pos.y += mCamHeight;
+		mCamTransform.position = pos;
 	}
 }
