@@ -41,55 +41,55 @@ public class Player : MonoBehaviour {
 		Screen.lockCursor = true;
 	}
 	
-	// Update is called once per frame
-	void Update () {
-#if (UNITY_iOS || UNITY_ANDROID)
-		MobileInput();
-#else
-		DesktopInput();
-#endif
-	}
+// 	// Update is called once per frame
+// 	void Update () {
+// #if (UNITY_iOS || UNITY_ANDROID)
+// 		MobileInput();
+// #else
+// 		DesktopInput();
+// #endif
+// 	}
 
-	void MobileInput() {
-		if (Input.GetKeyDown(KeyCode.Escape)) { // Application.Quit();
-			Application.Quit();
-		}
-		if (Input.GetKeyDown(KeyCode.Home)) {
+// 	void MobileInput() {
+// 		if (Input.GetKeyDown(KeyCode.Escape)) { // Application.Quit();
+// 			Application.Quit();
+// 		}
+// 		if (Input.GetKeyDown(KeyCode.Home)) {
 
-		}
-	}
+// 		}
+// 	}
 
-	void DesktopInput() {
-		// rot camera
-		float mouseX = Input.GetAxis ("Mouse X");
-		float mouseY = Input.GetAxis ("Mouse Y");
-		mCamRot.x -= mouseY;
-		mCamRot.y += mouseX;
-		mCamTransform.eulerAngles = mCamRot;
-		Vector3 camrot = mCamTransform.eulerAngles;
-		camrot.x = 0; 
-		camrot.z = 0;
-		mTransform.eulerAngles = camrot;
+// 	void DesktopInput() {
+// 		// rot camera
+// 		float mouseX = Input.GetAxis ("Mouse X");
+// 		float mouseY = Input.GetAxis ("Mouse Y");
+// 		mCamRot.x -= mouseY;
+// 		mCamRot.y += mouseX;
+// 		mCamTransform.eulerAngles = mCamRot;
+// 		Vector3 camrot = mCamTransform.eulerAngles;
+// 		camrot.x = 0; 
+// 		camrot.z = 0;
+// 		mTransform.eulerAngles = camrot;
 
-		float x = 0;
-		float y = 0;
-		float z = 0;
-		y -= mGravity * Time.deltaTime;
+// 		float x = 0;
+// 		float y = 0;
+// 		float z = 0;
+// 		y -= mGravity * Time.deltaTime;
 
-		if (Input.GetKey(KeyCode.W)) {
-			z += mMoveSpeed * Time.deltaTime;
-		} else if (Input.GetKey(KeyCode.S)) {
-			z -= mMoveSpeed * Time.deltaTime;
-		} else if (Input.GetKey(KeyCode.A)) {
-			x -= mMoveSpeed * Time.deltaTime;
-		} else if (Input.GetKey(KeyCode.D)) {
-			x += mMoveSpeed * Time.deltaTime;
-		}
-		// move
-		mCharacterCtrl.Move(mTransform.TransformDirection(new Vector3(x, y, z)));
+// 		if (Input.GetKey(KeyCode.W)) {
+// 			z += mMoveSpeed * Time.deltaTime;
+// 		} else if (Input.GetKey(KeyCode.S)) {
+// 			z -= mMoveSpeed * Time.deltaTime;
+// 		} else if (Input.GetKey(KeyCode.A)) {
+// 			x -= mMoveSpeed * Time.deltaTime;
+// 		} else if (Input.GetKey(KeyCode.D)) {
+// 			x += mMoveSpeed * Time.deltaTime;
+// 		}
+// 		// move
+// 		mCharacterCtrl.Move(mTransform.TransformDirection(new Vector3(x, y, z)));
 
-		Vector3 pos = mTransform.position;
-		pos.y += mCamHeight;
-		mCamTransform.position = pos;
-	}
+// 		Vector3 pos = mTransform.position;
+// 		pos.y += mCamHeight;
+// 		mCamTransform.position = pos;
+// 	}
 }
