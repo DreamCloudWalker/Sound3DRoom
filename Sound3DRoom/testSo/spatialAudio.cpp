@@ -8,7 +8,7 @@
 extern "C" {
     int initO3d()
     {
-        printf("initO3d");
+        printf("cpp initO3d");
         return 0;
     }
     

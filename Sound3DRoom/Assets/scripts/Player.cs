@@ -18,10 +18,12 @@ public class Player : MonoBehaviour {
 	
 	public  	Transform 				mTransform;
 	private 	Transform 				mCamTransform;
-	private 	Vector3 				mCamRot; 
+	private 	Vector3 				mCamRot;
 	private 	float 					mCamHeight = 0.3f;
 	private 	CharacterController 	mCharacterCtrl;
 	private 	float 					mMoveSpeed = 3.0f;
+	private 	float 					mYRotSpeed = 2.4f;
+	private 	float 					mXRotSpeed = 5.0f;
 	private 	float 					mGravity = 2.0f;
 
 	// Use this for initialization
@@ -39,7 +41,7 @@ public class Player : MonoBehaviour {
 
 		// test so 
 		int ret = initO3d();
-		Debug.LogFormat("--- ret:{0}", ret);
+		Debug.LogFormat("--- initO3d ret:{0}", ret);
 
 		// lock mouse
 		Screen.lockCursor = true;
@@ -62,22 +64,24 @@ public class Player : MonoBehaviour {
 
 		}
 
-		// rot camera
-		float mouseX = Input.GetAxis ("Mouse X");
-		float mouseY = Input.GetAxis ("Mouse Y");
-		mCamRot.x -= mouseY;
-		mCamRot.y += mouseX;
-		mCamTransform.eulerAngles = mCamRot;
-		Vector3 camrot = mCamTransform.eulerAngles;
-		camrot.x = 0; 
-		camrot.z = 0;
-		mTransform.eulerAngles = camrot;	// TODO post mult
+		if (Input.touchCount == 1) {
+			if (Input.GetTouch(0).phase == TouchPhase.Moved && Input.GetTouch(0).position.x > Screen.width/2) {
+				mCamRot.y += Input.GetAxis("Mouse X") * mYRotSpeed;
+                mCamRot.x -= Input.GetAxis("Mouse Y") * mXRotSpeed;
+				mCamTransform.eulerAngles = mCamRot;
+				Vector3 camrot = mCamTransform.eulerAngles;
+				camrot.x = 0; 
+				camrot.z = 0;
+				mTransform.eulerAngles = camrot;
+			}
+		}
 
 		float x = 0;
 		float y = 0;
 		float z = 0;
 		y -= mGravity * Time.deltaTime;
-		// gravity move
+
+		// move
 		mCharacterCtrl.Move(mTransform.TransformDirection(new Vector3(x, y, z)));
 
 		Vector3 pos = mTransform.position;
