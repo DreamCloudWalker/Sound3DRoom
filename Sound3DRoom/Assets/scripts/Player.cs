@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Runtime.InteropServices;
+using HedgehogTeam.EasyTouch;
 
 public class Player : MonoBehaviour {
 	[DllImport("spatialAudio")]
@@ -19,7 +20,6 @@ public class Player : MonoBehaviour {
 	public  	Transform 				mTransform;
 	private 	Transform 				mCamTransform;
 	private 	Vector3 				mCamRot;
-	private 	float 					mCamHeight = 0.3f;
 	private 	CharacterController 	mCharacterCtrl;
 	private 	float 					mMoveSpeed = 3.0f;
 	private 	float 					mYRotSpeed = 2.4f;
@@ -35,7 +35,6 @@ public class Player : MonoBehaviour {
 
         // camera follow player
 		Vector3 pos = mTransform.position;
-		pos.y += mCamHeight;
 		mCamTransform.position = pos;
 		mCamTransform.rotation = mTransform.rotation;
 		mCamRot = mCamTransform.eulerAngles;
@@ -43,6 +42,8 @@ public class Player : MonoBehaviour {
 		// test so 
     #if (UNITY_iOS || UNITY_ANDROID)
 		int ret = initO3d();
+		playO3d();
+		setAudioPosition(0, 0, 1.5f, 0);
 		Debug.LogFormat("--- initO3d ret:{0}", ret);
     #endif
 
@@ -54,6 +55,7 @@ public class Player : MonoBehaviour {
 	void Update () {
 #if (UNITY_iOS || UNITY_ANDROID)
 		MobileInput();
+		setListenerPosition(mTransform.position.x, mTransform.position.y, mTransform.position.z);
 #else
 		DesktopInput();
 #endif
@@ -67,17 +69,17 @@ public class Player : MonoBehaviour {
 
 		}
 
-		if (Input.touchCount == 1) {
-			if (Input.GetTouch(0).phase == TouchPhase.Moved && Input.GetTouch(0).position.x > Screen.width/2) {
-				mCamRot.y += Input.GetAxis("Mouse X") * mYRotSpeed;
-                mCamRot.x -= Input.GetAxis("Mouse Y") * mXRotSpeed;
-				mCamTransform.eulerAngles = mCamRot;
-				Vector3 camrot = mCamTransform.eulerAngles;
-				camrot.x = 0; 
-				camrot.z = 0;
-				mTransform.eulerAngles = camrot;
-			}
-		}
+		// if (Input.touchCount == 1) {
+		// 	if (Input.GetTouch(0).phase == TouchPhase.Moved && Input.GetTouch(0).position.x > Screen.width/2) {
+		// 		mCamRot.y += Input.GetAxis("Mouse X") * mYRotSpeed;
+        //         mCamRot.x -= Input.GetAxis("Mouse Y") * mXRotSpeed;
+		// 		mCamTransform.eulerAngles = mCamRot;
+		// 		Vector3 camrot = mCamTransform.eulerAngles;
+		// 		camrot.x = 0; 
+		// 		camrot.z = 0;
+		// 		mTransform.eulerAngles = camrot;
+		// 	}
+		// }
 
 		float x = 0;
 		float y = 0;
@@ -88,8 +90,20 @@ public class Player : MonoBehaviour {
 		mCharacterCtrl.Move(mTransform.TransformDirection(new Vector3(x, y, z)));
 
 		Vector3 pos = mTransform.position;
-		pos.y += mCamHeight;
 		mCamTransform.position = pos;
+
+		Gesture current = EasyTouch.current;
+ 		if (current == null)
+ 			return;
+		if (current.type == EasyTouch.EvtType.On_Swipe) {
+			mCamRot.y += current.deltaPosition.x / Screen.width * mYRotSpeed;
+			mCamRot.x -= current.deltaPosition.y / Screen.height * mXRotSpeed;
+			mCamTransform.eulerAngles = mCamRot;
+			Vector3 camrot = mCamTransform.eulerAngles;
+			camrot.x = 0; 
+			camrot.z = 0;
+			mTransform.eulerAngles = camrot;
+		}
 	}
 
 	void DesktopInput() {
@@ -122,7 +136,6 @@ public class Player : MonoBehaviour {
 		mCharacterCtrl.Move(mTransform.TransformDirection(new Vector3(x, y, z)));
 
 		Vector3 pos = mTransform.position;
-		pos.y += mCamHeight;
 		mCamTransform.position = pos;
 	}
 }
