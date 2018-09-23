@@ -28,6 +28,7 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		this.GetComponent<Renderer>().enabled = false;	// hide player
 		mTransform = this.transform;
 		mCharacterCtrl = this.GetComponent<CharacterController> ();
 		mCamTransform = Camera.main.transform;
@@ -40,8 +41,10 @@ public class Player : MonoBehaviour {
 		mCamRot = mCamTransform.eulerAngles;
 
 		// test so 
+    #if (UNITY_iOS || UNITY_ANDROID)
 		int ret = initO3d();
 		Debug.LogFormat("--- initO3d ret:{0}", ret);
+    #endif
 
 		// lock mouse
 		Screen.lockCursor = true;
