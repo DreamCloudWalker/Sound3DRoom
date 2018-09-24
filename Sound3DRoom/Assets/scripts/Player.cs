@@ -4,17 +4,17 @@ using System.Runtime.InteropServices;
 using HedgehogTeam.EasyTouch;
 
 public class Player : MonoBehaviour {
-	[DllImport("spatialAudio")]
+	[DllImport("o3d_audio")]
 	public static extern int initO3d();	// 0 success 
-	[DllImport("spatialAudio")]
+	[DllImport("o3d_audio")]
 	public static extern void deinitO3d();
-	[DllImport("spatialAudio")]
+	[DllImport("o3d_audio")]
 	public static extern void playO3d();
-	[DllImport("spatialAudio")]
+	[DllImport("o3d_audio")]
 	public static extern void stopO3d();
-	[DllImport("spatialAudio")]
+	[DllImport("o3d_audio")]
 	public static extern void setListenerPosition(float x, float y, float z);
-	[DllImport("spatialAudio")]
+	[DllImport("o3d_audio")]
 	public static extern void setAudioPosition(long id, float x, float y, float z);	// default id 0
 	
 	public  	Transform 				mTransform;
@@ -55,6 +55,7 @@ public class Player : MonoBehaviour {
 	void Update () {
 #if (UNITY_iOS || UNITY_ANDROID)
 		MobileInput();
+		// Debug.Log("EasyTouch setListenerPosition x = " + mTransform.position.x + ", z = " + mTransform.position.z);
 		setListenerPosition(mTransform.position.x, mTransform.position.y, mTransform.position.z);
 #else
 		DesktopInput();
@@ -93,9 +94,13 @@ public class Player : MonoBehaviour {
 		mCamTransform.position = pos;
 
 		Gesture current = EasyTouch.current;
- 		if (current == null)
+		// Debug.Log("EasyTouch current get current.type = " + current.type);
+ 		if (current == null) {
+			Debug.Log("EasyTouch current is null");
  			return;
-		if (current.type == EasyTouch.EvtType.On_Swipe) {
+		 }
+		if (current.type == EasyTouch.EvtType.On_Drag) {	// TODO
+			// Debug.Log("EasyTouch Type" + current.swipe);
 			mCamRot.y += current.deltaPosition.x / Screen.width * mYRotSpeed;
 			mCamRot.x -= current.deltaPosition.y / Screen.height * mXRotSpeed;
 			mCamTransform.eulerAngles = mCamRot;
