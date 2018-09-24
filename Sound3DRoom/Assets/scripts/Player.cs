@@ -94,13 +94,13 @@ public class Player : MonoBehaviour {
 		mCamTransform.position = pos;
 
 		Gesture current = EasyTouch.current;
-		// Debug.Log("EasyTouch current get current.type = " + current.type);
+		Debug.Log("EasyTouch current get current.type = " + current.type);
  		if (current == null) {
 			Debug.Log("EasyTouch current is null");
  			return;
 		 }
 		if (current.type == EasyTouch.EvtType.On_Drag) {	// TODO
-			// Debug.Log("EasyTouch Type" + current.swipe);
+			Debug.Log("EasyTouch On_Drag");
 			mCamRot.y += current.deltaPosition.x / Screen.width * mYRotSpeed;
 			mCamRot.x -= current.deltaPosition.y / Screen.height * mXRotSpeed;
 			mCamTransform.eulerAngles = mCamRot;
